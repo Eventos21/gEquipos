@@ -1,0 +1,11 @@
+Options All -Indexes
+
+RewriteEngine On
+Options -Indexes
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^$ index.php?view=index [L,QSA]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ index.php?view=$1 [L,QSA]
+
+DirectoryIndex index-view.php
