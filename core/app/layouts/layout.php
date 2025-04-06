@@ -248,6 +248,11 @@ if (isset($_SESSION["typeuser"]) && ($_SESSION["typeuser"] == 1 || $_SESSION["ty
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link menu-link" href="misfederados">
+                                <i class="ri-user-follow-fill"></i> <span data-key="t-liga">Mis Federados</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link menu-link" href="mequipo">
                                 <i class="ri-team-fill"></i> <span data-key="t-liga">Equipos</span>
                             </a>

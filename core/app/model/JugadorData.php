@@ -339,5 +339,37 @@
             return $result->total;
         }
 
+        public static function verJugadoresPorClub($club, $start, $length, $search = '') {
+            // Filtra jugadores cuyo campo club (texto) coincida con el valor de $club.
+            $sql = "SELECT * FROM " . self::$tablename . " WHERE club = '" . addslashes($club) . "'";
+            if ($search) {
+                $sql .= " AND (nombre LIKE '%" . addslashes($search) . "%' 
+                            OR apellido1 LIKE '%" . addslashes($search) . "%' 
+                            OR apellido2 LIKE '%" . addslashes($search) . "%')";
+            }
+            $sql .= " LIMIT $start, $length";
+            $query = Executor::doit($sql);
+            return Model::many($query[0], new JugadorData());
+        }
+
+        public static function totalJugadoresPorClub($club) {
+            $sql = "SELECT COUNT(*) as total FROM " . self::$tablename . " WHERE club = '" . addslashes($club) . "'";
+            $query = Executor::doit($sql);
+            $result = Model::one($query[0], new JugadorData());
+            return $result->total;
+        }
+
+        public static function totalJugadoresPorClubFiltered($club, $search) {
+            $sql = "SELECT COUNT(*) as total FROM " . self::$tablename . " WHERE club = '" . addslashes($club) . "'";
+            if ($search) {
+                $sql .= " AND (nombre LIKE '%" . addslashes($search) . "%' 
+                            OR apellido1 LIKE '%" . addslashes($search) . "%' 
+                            OR apellido2 LIKE '%" . addslashes($search) . "%')";
+            }
+            $query = Executor::doit($sql);
+            $result = Model::one($query[0], new JugadorData());
+            return $result->total;
+        }
+
 }
 ?>
