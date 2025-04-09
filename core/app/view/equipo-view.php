@@ -1,12 +1,12 @@
 <?php
-session_start();
 if (
-    isset($_SESSION["conticomtc"]) && 
-    isset($_SESSION["typeuser"]) && $_SESSION["typeuser"] == 1 && 
+    isset($_SESSION["conticomtc"]) &&
+    isset($_SESSION["typeuser"]) && $_SESSION["typeuser"] == 1 &&
     isset($_SESSION["cargo"]) && $_SESSION["cargo"] == 1
 ) {
+    // Asignamos $u dentro del bloque de acceso autorizado.
+    $u = UserData::verid($_SESSION['conticomtc']);
 ?>
- $u = UserData::verid($_SESSION['conticomtc']); ?>
 <style>
     .btn {
         font-size: 10px; 

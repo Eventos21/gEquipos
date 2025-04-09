@@ -1,5 +1,4 @@
 <?php
-session_start();
 if (
     isset($_SESSION["conticomtc"]) && 
     isset($_SESSION["typeuser"]) && $_SESSION["typeuser"] == 1 && 

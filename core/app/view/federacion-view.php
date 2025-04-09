@@ -1,10 +1,11 @@
 <?php
-session_start();
 if (
-    isset($_SESSION["conticomtc"]) && 
-    isset($_SESSION["typeuser"]) && $_SESSION["typeuser"] == 1 && 
+    isset($_SESSION["conticomtc"]) &&
+    isset($_SESSION["typeuser"]) && $_SESSION["typeuser"] == 1 &&
     isset($_SESSION["cargo"]) && $_SESSION["cargo"] == 1
 ) {
+    // El usuario tiene acceso: rol administrativo y cargo 1 (Federación)
+    $u = UserData::verid($_SESSION['conticomtc']);
 ?>
 <style>
     .btn {
