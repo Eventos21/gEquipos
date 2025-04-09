@@ -85,7 +85,7 @@ $contador = $disponible->cantidadequipo - $totalregistro; ?>
                 <div class="col">
                     <div class="card shadow">
                         <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
-                            <h5 class="card-title mb-0 text-white">Lista de registro de Equipos</h5>
+                            <h5 class="card-title mb-0 text-white">Lista de Equipos Archivados</h5>
                             <!-- <b style="color: #FFFFFF"><marquee>Cantidad diponible a registrar <?= $contador; ?></marquee></b> -->
                         </div>
                         <div class="card-body">

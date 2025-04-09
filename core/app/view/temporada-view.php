@@ -1,3 +1,11 @@
+<?php
+session_start();
+if (
+    isset($_SESSION["conticomtc"]) && 
+    isset($_SESSION["typeuser"]) && $_SESSION["typeuser"] == 1 && 
+    isset($_SESSION["cargo"]) && $_SESSION["cargo"] == 1
+) {
+?>
 <div class="main-content">
     <div class="page-content">
         <div class="container-fluid">
@@ -293,3 +301,7 @@
         });
     });
 </script>
+<?php } else {
+    header("Location: ./"); 
+    exit();
+} ?>

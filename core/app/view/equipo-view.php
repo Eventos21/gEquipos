@@ -1,5 +1,11 @@
 <?php
-if (isset($_SESSION["conticomtc"]) && isset($_SESSION["typeuser"]) && ($_SESSION["typeuser"] == 1 || $_SESSION["typeuser"] == 2)) {
+session_start();
+if (
+    isset($_SESSION["conticomtc"]) && 
+    isset($_SESSION["typeuser"]) && $_SESSION["typeuser"] == 1 && 
+    isset($_SESSION["cargo"]) && $_SESSION["cargo"] == 1
+) {
+?>
  $u = UserData::verid($_SESSION['conticomtc']); ?>
 <style>
     .btn {

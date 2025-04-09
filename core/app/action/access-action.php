@@ -43,6 +43,7 @@ if ($_SESSION['typeuser'] == 1) {
             $credentialsCorrect = true;
             $yo = $r['id'];
             $cargo = $r['cargo']; // Por ejemplo: 1, 2, 3 o 4
+            $_SESSION['cargo'] = $cargo;
             // En el caso de cargo=2 (Club), el campo "club" de la tabla usuario contiene un valor numérico
             // que debemos usar para obtener el código alfabético desde la tabla club.
             if ($cargo == 2) {

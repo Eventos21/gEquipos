@@ -89,7 +89,7 @@ function showAlert($type, $message, $library = 'swal', $title = '', $timer = 100
                                      class="img-fluid rounded-circle border border-primary mb-3" 
                                      style="width: 90px; height: 90px;" 
                                      alt="Logo del club">
-                                <h4 class="fw-semibold text-dark mb-1">Club de Ajedrez <?= $clubs->nombre; ?> / Equipo <?= $equipos->nombre; ?></h4>
+                                <h4 class="fw-semibold text-dark mb-1"><?= $equipos->nombre; ?></h4>
                             </div>
                             <div class="col-md-4 text-md-end text-center">
                                 <p class="text-muted mb-1">Liga: <span class="fw-bold text-primary"><?= $ligas->nombre; ?></span></p>

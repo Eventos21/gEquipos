@@ -26,7 +26,7 @@ $contador = $disponible->cantidadequipo - $totalregistro; ?>
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                         <div class="card-body text-center">
                             <img src="storage/per/logo.png" class="img-fluid rounded-circle mb-3" style="width: 100px; height: 100px;" alt="Logo del club">
-                            <h4 class="card-title mb-0">Club Deportivo <?= $disponible->nombre; ?> </h4>
+                            <h4 class="card-title mb-0">Club de Ajedrez <?= $disponible->nombre; ?> </h4>
                         </div>
                     </div>
                 </div>
