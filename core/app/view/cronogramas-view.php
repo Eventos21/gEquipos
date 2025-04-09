@@ -131,10 +131,11 @@
                         var calendar = new FullCalendar.Calendar(calendarEl, {
                             initialView: 'dayGridMonth',
                             locale: 'es',
+                            firstDay: 1, // Aquí se indica que la semana empieza en lunes
                             headerToolbar: {
-                                left: 'prev,next today',
+                                left: 'prev',
                                 center: 'title',
-                                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                                right: 'next'
                             },
                             buttonText: {
                                 today: 'Hoy',
@@ -233,8 +234,8 @@
                 <th scope="col">Encuentro</th>
                 <th scope="col">Resultado</th>
                 <th scope="col">Usuario</th>
-                <th scope="col">Aprobacion</th>
-                <th scope="col">Actas</th>
+                <th scope="col">Verificado</th>
+                <th scope="col">Acta</th>
               </tr>
             </thead>
             <tbody id="detailsTableBody"></tbody>
