@@ -1,10 +1,22 @@
 <?php 
-if (isset($_SESSION["conticomtc"]) && isset($_SESSION["typeuser"]) && ($_SESSION["typeuser"] == 1 || $_SESSION["typeuser"] == 2)) {
+if (
+    isset($_SESSION["conticomtc"]) && 
+    isset($_SESSION["typeuser"]) && $_SESSION["typeuser"] == 1 && 
+    isset($_SESSION["cargo"]) && ($_SESSION["cargo"] == 1 || $_SESSION["cargo"] == 2)
+) {
 $cantiadess=0;
 $equipos = EquipoData::verid($_GET['tid']);
 $u = UserData::verid($_SESSION['conticomtc']);
 $clubs = ClubData::verid($equipos->club);
 $ligas = LigaData::verid($equipos->liga);
+if ( ($_SESSION['typeuser'] == 1 && isset($_SESSION['cargo']) && $_SESSION['cargo'] == 2) ) {
+    // Comprobamos que el código del club obtenido del equipo (desde $clubs->codigo) coincida con el de la sesión
+    if ($clubs->codigo !== $_SESSION['club']) {
+        $_SESSION['error_message'] = "Acceso denegado: el equipo no pertenece a tu club.";
+        header("Location: index.php?view=error");
+        exit();
+    }
+}
 $participantes = count(EquipoJugadorData::vercontenidos($_GET['tid']));
 $ligausuarios = ligaUsuarioData::verid_lista($ligas->id, $equipos->club);
 $ordenequ = EquipoData::verid_orden($_GET['tid'],$equipos->club);
