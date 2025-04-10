@@ -3,6 +3,7 @@
         public static $tablename = "equipo";
         public $id;
         public $liga;
+        public $categoria;
         public $club;
         public $nombre;
         public $capitan;
@@ -190,29 +191,49 @@
             return $result->total;
         }
         public static function vercontenidoPaginado1($club, $start, $length, $search = '') {
+            // Convertir $club a entero para evitar problemas si es pasado como cadena
+            $club = intval($club);
+
             $sql = "SELECT c.*, ";
             $sql .= "(SELECT COUNT(ej.id) FROM equipo_jugador ej WHERE ej.equipo = c.id) AS cantidad_jugadores, "; 
             $sql .= "CASE WHEN c.capitan REGEXP '^[0-9]+$' THEN CONCAT(u.nombre, ' ', u.apellido) ELSE c.capitan END AS capitanes, ";
             $sql .= "CASE WHEN c.subcapitan REGEXP '^[0-9]+$' THEN CONCAT(us.nombre, ' ', us.apellido) ELSE c.subcapitan END AS subcapitanes, ";
-            $sql .= "cl.nombre AS clubes, l.nombre AS ligas, l.minimo, l.maximo,l.fechafinalmodificacion  ";
-            $sql .= "FROM ".self::$tablename." c ";
+            $sql .= "cl.nombre AS clubes, l.nombre AS ligas, l.minimo, l.maximo, l.fechafinalmodificacion, ";
+            $sql .= "cmp.nombregrupo AS categoria ";  // Se agrega la nueva columna
+            $sql .= "FROM " . self::$tablename . " c ";
             $sql .= "JOIN club cl ON cl.id = c.club ";
             $sql .= "LEFT JOIN usuario u ON u.id = c.capitan ";
             $sql .= "LEFT JOIN usuario us ON us.id = c.subcapitan ";
             $sql .= "LEFT JOIN liga l ON l.id = c.liga ";
             $sql .= "LEFT JOIN temporada t ON t.id = l.temporada ";
+            $sql .= "LEFT JOIN competicion cmp ON cmp.id = c.competicion ";  // Asegúrate de que 'competicion_id' es el nombre correcto
             $sql .= "WHERE c.club = $club AND t.estado = 1 ";
-            
+
             if ($search) {
-                $sql .= "AND c.nombre LIKE '%$search%' ";
+                // Se emplea addslashes para evitar problemas de comillas
+                $sql .= "AND c.nombre LIKE '%" . addslashes($search) . "%' ";
             }
-            
+
             $sql .= "ORDER BY c.id DESC ";
             $sql .= "LIMIT $start, $length";
             
+            // Para depuración, registramos la consulta SQL
+            error_log("SQL Query (vercontenidoPaginado1): " . $sql);
+            
             $query = Executor::doit($sql);
+
+            // Si hay error en la consulta, lo registramos
+            if(!$query) {
+                $error = mysqli_error(Database::getInstance()->getConnection());
+                error_log("SQL Error: " . $error);
+                // Retornamos un array vacío para evitar que se rompa el JSON
+                return array();
+            }
+            
             return Model::many($query[0], new EquipoData());
         }
+
+
 
         public static function totalRegistro1($club){
             $sql = "select COUNT(*) as total from ".self::$tablename." WHERE club=$club ";

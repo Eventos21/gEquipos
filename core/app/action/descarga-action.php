@@ -1,18 +1,39 @@
-<?php 
+<?php
+// Verificar que el usuario esté logueado
+if (!isset($_SESSION['conticomtc'])) {
+    header("Location: index.php?view=login");
+    exit();
+}
 require_once('tcpdf/tcpdf.php');
+// Recupera el usuario logueado y el equipo solicitado
 $user = UserData::verid($_SESSION['conticomtc']);
+
+// Permitir la descarga solamente si el usuario tiene cargo 1 (Federación) o cargo 2 (Club).
+if (!in_array($user->cargo, array(1,2))) {
+    header("Location: index.php?view=error&message=Acceso denegado: no tienes permiso para descargar.");
+    exit();
+}
+
 $equipos = EquipoData::verid($_GET['equipo']);
+
+// Agregar una verificación opcional para asegurarnos de que se encontró el equipo
+if (!$equipos) {
+    header("Location: index.php?view=error&message=Equipo no encontrado.");
+    exit();
+}
+
 $competicion1 = CompeticionData::verid($equipos->competicion);
 $ligas = LigaData::verid($equipos->liga);
 $clubes = ClubData::verid($equipos->club);
-function formato_soles($monto) {
-    $simbolo_moneda = "C$ ";
-    $monto_formateado = number_format($monto, 2, '.', ',');
-    $monto_formateado = $simbolo_moneda . $monto_formateado;
-    return $monto_formateado;
+
+// Para cargo 2 (Club), se valida que el equipo pertenezca al club del usuario.
+if ($user->cargo == 2) {  
+    if (!$clubes || $clubes->codigo !== $_SESSION['club']) {
+        header("Location: index.php?view=error&message=Acceso denegado: el equipo no pertenece a tu club.");
+        exit();
+    }
 }
-$total_gasto = 0;
-$utilidad_bruta = 0;
+
 $pdf = new TCPDF('L', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
 $pdf->SetCreator(PDF_CREATOR);
@@ -285,4 +306,5 @@ if(file_exists($image_file) && is_readable($image_file)){
 }
 
 $nombre_archivo = $equipos->nombre.'.pdf';
-$pdf->Output($nombre_archivo, 'I'); ?>
+$pdf->Output($nombre_archivo, 'D');
+exit();?>

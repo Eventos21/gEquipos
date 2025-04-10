@@ -97,11 +97,12 @@ $contador = $disponible->cantidadequipo - $totalregistro; ?>
                                         <tr class="table-primary">
                                             <th>Equipo</th>
                                             <th>Liga</th>
+                                            <th>Categoría</th>
                                             <th>Capitán</th>
                                             <th>Subcapitán</th>
                                             <th>Estado</th>
                                             <th>Participantes</th>
-                                            <th># Jugador</th>
+                                            <th>Jugadores</th>
                                             <th>Acción</th>
                                         </tr>
                                     </thead>
@@ -506,6 +507,7 @@ $contador = $disponible->cantidadequipo - $totalregistro; ?>
                     }
                 },
                 { "data": "ligas" },
+                { "data": "categoria" },
                 { "data": function(row) {
                         return row.capitanes + ' ' + "<span style='color: blue;'>(" + moment(row.nacimiento1).format('DD-MM-YYYY') + ")</span>";
                     }
