@@ -149,11 +149,9 @@ function showAlert($type, $message, $library = 'swal', $title = '', $timer = 100
                                         <th>ID FIDE</th>
                                         <th>Fecha nacimiento</th>
                                         <th>Teléfono</th>
-                                        <th>Club</th>
                                         <th>Código FMA</th>
                                         <th>Elo</th>
                                         <th>Estado</th>
-                                        <th><i class="ri-settings-5-line"></i></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -363,6 +361,8 @@ function showAlert($type, $message, $library = 'swal', $title = '', $timer = 100
             "processing": true,
             "serverSide": true,
             "ajax": "index.php?action=apijugadorequipo&equipo=" + <?= $_GET['tid'];?>,
+            "pageLength": 25, // Muestra 25 registros por defecto
+            "lengthMenu": [[10, 25, 50, 1000], [10, 25, 50, "Todos"]], // Sólo se permiten estas opciones en el menú
             "columns": [
                 { "data": function(row) {
                         return row.nombre + ' ' + row.apellido1 + ' '+ row.apellido2 ;
@@ -376,7 +376,6 @@ function showAlert($type, $message, $library = 'swal', $title = '', $timer = 100
                     }
                 },
                 { "data": "telefono" },
-                { "data": "club" },
                 { "data": "codigofide" },
                 { "data": function(row) {
                         if (row.elos=="") {
@@ -395,24 +394,6 @@ function showAlert($type, $message, $library = 'swal', $title = '', $timer = 100
                         }
                     }
                 },
-                { 
-                    "data": null,
-                    "render": function (data, type, row) {
-                        // var editButton = '<button class="btn btn-primary btn-sm edit-btn" data-id="' + row.id + '"><i class="ri-edit-2-fill"></i></button>';
-                        var deleteButton = '';
-                        if (row.nuevo == 0) {
-                            deleteButton = '<button class="btn btn-danger btn-sm delete-btn" data-id="' + row.id1 + '"><i class="ri-delete-bin-2-line"></i></button>';
-                        }
-                        // if (row.estado == 1) {
-                        //     deleteButton = '<button class="btn btn-danger btn-sm delete-btn" data-id="' + row.id1 + '"><i class="ri-delete-bin-2-line"></i></button>';
-                        // } else {eliminar
-                        //     deleteButton = '<button class="btn btn-danger btn-sm delete-btn" data-id="' + row.id1 + '" disabled><i class="ri-delete-bin-2-line"></i></button>';
-                        // }
-
-                        // return editButton + ' ' + deleteButton;
-                        return  deleteButton;
-                    }
-                }
             ],
             "language": {
                 "sProcessing":     "Procesando...",
@@ -545,6 +526,8 @@ $(document).ready(function() {
             $('#customerTable1').DataTable({
                 "processing": true,
                 "serverSide": true,
+                "pageLength": 25, // Muestra 25 registros por defecto
+                "lengthMenu": [[10, 25, 50, 1000], [10, 25, 50, "Todos"]], // Sólo se permiten estas opciones en el menú                
                 "ajax": "index.php?action=apijugadorporclub&tid="+<?= $clubs->id; ?>+"&liga="+<?= $ligas->id;?>,
                 "columns": [
                     { 
@@ -666,6 +649,8 @@ $(document).ready(function() {
                 var table = $('#dynamicTable').DataTable({
                     "processing": true,
                     "serverSide": true,
+                    "pageLength": 25, // Muestra 25 registros por defecto
+                    "lengthMenu": [[10, 25, 50, 1000], [10, 25, 50, "Todos"]], // Sólo se permiten estas opciones en el menú
                     "ajax": "index.php?action=apijugadorequipo&equipo=<?= $_GET['tid']; ?>",
                     "columns": [
                         { "data": function(row) { return row.nombre + ' ' + row.apellido1 + ' ' + row.apellido2; } },
@@ -677,7 +662,6 @@ $(document).ready(function() {
                             }
                         },
                         { "data": "telefono" },
-                        { "data": "club" },
                         { "data": "codigofide" },
                         { "data": "elo" }
                     ],

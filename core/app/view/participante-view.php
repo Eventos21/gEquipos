@@ -565,6 +565,10 @@ $(document).ready(function() {
             $('#customerTable1').DataTable({
                 "processing": true,
                 "serverSide": true,
+                "pageLength": 25, // Muestra 25 registros por defecto
+                "lengthMenu": [[10, 25, 50, 1000], [10, 25, 50, "Todos"]], // Sólo se permiten estas opciones en el menú
+                "pageLength": 25, // Muestra 25 registros por defecto
+                "lengthMenu": [[10, 25, 50, 1000], [10, 25, 50, "Todos"]], // Sólo se permiten estas opciones en el menú
                 "ajax": "index.php?action=apijugador&liga="+<?= $ligas->id; ?>,
                 "columns": [
                     { 
@@ -686,6 +690,8 @@ $(document).ready(function() {
                 var table = $('#dynamicTable').DataTable({
                     "processing": true,
                     "serverSide": true,
+                    "pageLength": 25, // Muestra 25 registros por defecto
+                    "lengthMenu": [[10, 25, 50, 1000], [10, 25, 50, "Todos"]], // Sólo se permiten estas opciones en el menú
                     "ajax": "index.php?action=apijugadorequipo&equipo=<?= $_GET['tid']; ?>",
                     "columns": [
                         { "data": function(row) { return row.nombre + ' ' + row.apellido1 + ' ' + row.apellido2; } },

@@ -359,6 +359,8 @@ if (
                     $('#customerTable1').DataTable({
                         "processing": true,
                         "serverSide": true,
+                        "pageLength": 25, // Muestra 25 registros por defecto
+                        "lengthMenu": [[10, 25, 50, 1000], [10, 25, 50, "Todos"]], // Sólo se permiten estas opciones en el menú
                         "ajax": "index.php?action=apijugadorequipo&equipo=" + id,
                         "columns": [
                             { "data": function(row) {
