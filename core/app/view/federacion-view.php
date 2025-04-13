@@ -239,55 +239,61 @@ if (
 </script>
 <script>
     $(document).ready(function() {
-        $('#customerTable').DataTable({
-            "processing": true,
-            "serverSide": true,
-            // "ajax": "index.php?action=apiequipo",
-            "ajax": "index.php?action=apifederacion",
-            "columns": [
-                { "data": function(row) {
-                        return row.nombre ;
-                    }
-                },
-                { "data": "ligas" },
-                { "data": "clubes" },
-                { "data": function(row) {
-                        return row.capitanes + ' ' + "<span style='color: blue;'>(" + moment(row.nacimiento1).format('DD-MM-YYYY') + ")</span>";
-                    }
-                },
-                { "data": function(row) {
-                        return row.subcapitanes + ' <span style="color: blue;">(' + moment(row.nacimiento2).format('DD-MM-YYYY') + ')</span>';
-                    }
-                },
-                { "data": "estado",
-                    "render": function(data, type, row) {
-                        if(data == 1) {
-                            return '<span class="text-primary">Sin Enviar</span>';
-                        }
-                        if(data == 2) {
-                            return '<span class="text-success">Enviado</span>';
-                        }
-                        if(data == 3) {
-                            // return '<button class="btn btn-sm btn-success" data-id="' + row.id + '">Aceptado</button>';
-                            return '<span class="text-success">Aceptado</span>';
-                        }
-                        if(data == 4) {
-                            // return '<button class="btn btn-sm btn-danger" data-id="' + row.id + '">Rechazado</button>';
-                            return '<span class="text-danger">Rechazado</span>';
-                        }
-                        if(data == 5) {
-                            // return '<button class="btn btn-sm btn-warning" data-id="' + row.id + '">Observado</button>';
-                            return '<span class="text-warning">Añadido comentario</span>';
-                        }
-                    }
-                },
-                { 
-                    "data": null,
-                    "render": function (data, type, row) { 
-                        return '<button title="Validar el Equipo" class="btn btn-info btn-sm federacion-btn" data-id="' + row.id + '"><i class="ri-checkbox-circle-fill"></i></button>' + ' ' + '<button title="Mostrar la lista de jugadores" class="btn btn-primary btn-sm jugadores-btn" data-id="' + row.id + '"><i class="ri-group-line"></i></button>';
-                    }
-                }
-            ],
+$('#customerTable').DataTable({
+  "processing": true,
+  "serverSide": true,
+  "ajax": "index.php?action=apifederacion",
+  // ...
+  "columns": [
+    // Equipo
+    { "data": function(row) {
+        return row.nombre; // e.nombre as 'nombre'
+    }},
+    // Liga
+    { "data": "ligas" },
+    // Club
+    { "data": "clubes" },
+
+    // Capitán + birth
+    { "data": function(row) {
+        // row.capitanes = string (the name)
+        // row.nacimiento1 = date
+        return row.capitanes + ' <span style="color:blue;">('
+               + moment(row.nacimiento1).format('DD-MM-YYYY')
+               + ')</span>';
+    }},
+    // Subcapitán + birth
+    { "data": function(row) {
+        return row.subcapitanes + ' <span style="color:blue;">('
+               + moment(row.nacimiento2).format('DD-MM-YYYY')
+               + ')</span>';
+    }},
+    // Estado
+    { "data": "estado",
+      "render": function(data) {
+         // same logic you had
+         switch(data){
+           case '2': return '<span class="text-success">Enviado</span>';
+           case '4': return '<span class="text-danger">Rechazado</span>';
+           default:  return data;
+         }
+      }
+    },
+    // Acciones
+    { "data": null,
+      "render": function (data, type, row) { 
+        // your action buttons
+        return `<button title="Validar"
+                 class="btn btn-info btn-sm federacion-btn"
+                 data-id="${row.id}">
+                 <i class="ri-checkbox-circle-fill"></i></button>
+                <button title="Mostrar Jugadores"
+                 class="btn btn-primary btn-sm jugadores-btn"
+                 data-id="${row.id}">
+                 <i class="ri-group-line"></i></button>`;
+      }
+    }
+  ],
             "language": {
                 "sProcessing":     "Procesando...",
                 "sLengthMenu":     "Mostrar _MENU_ registros",

@@ -1,4 +1,5 @@
 <?php
+#[\AllowDynamicProperties]
     class EquipoData {
         public static $tablename = "equipo";
         public $id;
@@ -323,6 +324,33 @@
                     WHERE c.club=$club AND t.archivado1=1";
             if ($search) {
                 $sql .= " AND c.nombre LIKE '%$search%'";
+            }
+            $query = Executor::doit($sql);
+            $result = Model::one($query[0], new EquipoData());
+            return $result->total;
+        }
+
+        public static function totalRegistroFederacion(){
+            $sql = "SELECT COUNT(*) AS total 
+                    FROM equipo 
+                    JOIN liga l ON l.id = equipo.liga
+                    JOIN temporada t ON t.id = l.temporada
+                    WHERE t.estado=1
+                      AND equipo.estado IN (2,4)";
+            $query = Executor::doit($sql);
+            $result = Model::one($query[0], new EquipoData());
+            return $result->total;
+        }
+
+        public static function totalRegistrosFiltradosFederacion($search){
+            $sql = "SELECT COUNT(*) AS total 
+                    FROM equipo 
+                    JOIN liga l ON l.id = equipo.liga
+                    JOIN temporada t ON t.id = l.temporada
+                    WHERE t.estado=1
+                      AND equipo.estado IN (2,4)";
+            if(!empty($search)){
+               $sql .= " AND ( equipo.nombre LIKE '%$search%' )";
             }
             $query = Executor::doit($sql);
             $result = Model::one($query[0], new EquipoData());
