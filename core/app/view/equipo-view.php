@@ -457,7 +457,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 </p>
             </div>
           <div class="modal-footer bg-info d-flex justify-content-between pb-0">
-              <input class="form-control" type="hidden" name="actions" value="33">
+              <input class="form-control" type="hidden" name="actions" id="actionsFederacion" value="">
               <input class="form-control" type="hidden" name="id" id="ids1">
               <button type="button" class="btn btn-outline-light me-2" data-bs-dismiss="modal">Cerrar</button>
               <button type="submit" class="btn btn-light">Enviar</button>
@@ -593,6 +593,9 @@ document.addEventListener("DOMContentLoaded", function() {
                         }
                         if(data == 5) {
                             return '<button class="btn btn-sm btn-warning noinnabilitar jugadores-btn" data-id="' + row.id + '">Observado</button>';
+                        }
+                        if(data == 6) {
+                            return '<button class="btn btn-sm btn-warning noinnabilitar jugadores-btn" data-id="' + row.id + '">Modificado</button>';
                         }
                     }
                 },
@@ -966,9 +969,18 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         $('#customerTable').on('click', '.federacion-btn', function() {
-            let id = $(this).data('id');
-            $('#ids1').val(id);
-            $('#confirm-delete-btn').data('id', id);
+            // 1) Obtén la fila DataTable
+            var table = $('#customerTable').DataTable();
+            var data  = table.row($(this).closest('tr')).data();
+
+            // 2) Rellena el campo oculto con el ID
+            $('#ids1').val(data.id);
+
+            // 3) Decide la acción: si estado == 1 → 33, sino → 330
+            var accion = (data.estado == 1) ? 33 : 330;
+            $('#actionsFederacion').val(accion);
+
+            // 4) Abre el modal
             $('#Federacion').modal('show');
         });
 
@@ -1015,6 +1027,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
                 if(data.estado == 5) {
                     $('#estados').text('Observado').css('color', '#0275d8'); // Azul claro para 'Observado'
+                    $('#descar-pdf').hide();
+                }
+                if(data.estado == 6) {
+                    $('#estados').text('Modificado').css('color', '#f0ad4e'); // Amarillo para 'Modificado'
                     $('#descar-pdf').hide();
                 }
 

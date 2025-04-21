@@ -907,6 +907,14 @@ if ($actions==33) {
     $_SESSION['success_messagea'] = "Enviado a la federación de manera exitosa.";
     header("Location: equipo");
 }
+if ($actions==330) {
+    $registro = new EquipoData();
+    $registro->estado=6;
+    $registro->id=$_POST['id'];
+    $registro->enviar_federacion();
+    $_SESSION['success_messagea'] = "Enviado a la federación de manera exitosa.";
+    header("Location: equipo");
+}
 if ($actions==34) {
     $duplicidad=$_POST['nombre'].$_POST['liga'];
     $c = EquipoData::duplicidad($duplicidad);
@@ -1000,6 +1008,22 @@ if ($actions==37) {
     $_SESSION['success_messagea'] = "Enviado a la federación de manera exitosa.";
     header("Location: mequipo");
 }
+if ($actions==370) {
+    $registro = new EquipoData();
+    $registro->estado=6;
+    $registro->id=$_POST['id'];
+    $registro->enviar_federacion();
+    $datas = EquipoJugadorData::vercontenidos1($_POST['id']);
+    foreach ($datas as $data) {
+        $actualizar = new EquipoJugadorData();
+        $actualizar->id=$data->id;
+        $actualizar->nuevo=1;
+        $actualizar->cambiodenuevo();
+    }
+    $_SESSION['success_messagea'] = "Enviado a la federación de manera exitosa.";
+    header("Location: mequipo");
+}
+
 if ($actions == 38) {
     $clubes = $_POST['club_'];
     $liga = $_POST['liga'];

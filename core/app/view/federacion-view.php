@@ -275,6 +275,7 @@ $('#customerTable').DataTable({
          switch(data){
            case '2': return '<span class="text-success">Enviado</span>';
            case '4': return '<span class="text-danger">Rechazado</span>';
+           case '6': return '<span class="text-warning">Modificado</span>';
            default:  return data;
          }
       }
@@ -353,6 +354,9 @@ $('#customerTable').DataTable({
                 if(data.estado == 5) {
                     $('#estados').text('Con comentario').css('color', '#0275d8'); // Azul claro para 'Observado'
                 }
+                if(data.estado == 6) {
+                    $('#estados').text('Modificado').css('color', '#f0ad4e'); // Amarillo para 'Modificado'
+                }                
 
                 $('#Federacion').modal('show');
             }, "json");

@@ -12,7 +12,7 @@ if ($_GET['action'] == 'apifederacion') {
           FROM equipo e
           JOIN club c ON e.club = c.id
           JOIN liga l ON e.liga = l.id
-         WHERE e.estado IN (2, 4)
+         WHERE e.estado IN (2, 6)
     ";
 
     // If DataTables search is non-empty, add a condition
@@ -58,7 +58,7 @@ if ($_GET['action'] == 'apifederacion') {
         JOIN liga l      ON e.liga = l.id
         LEFT JOIN usuario u  ON e.capitan    = u.id
         LEFT JOIN usuario us ON e.subcapitan = us.id
-        WHERE e.estado IN (2, 4)
+        WHERE e.estado IN (2, 6)
     ";
 
     // Add search conditions if needed
