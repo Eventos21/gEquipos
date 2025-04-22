@@ -24,7 +24,6 @@ class EquipoJugadorData {
         public $usuario;
         public $edad_completa;
         public $nuevo;
-
         public $estadoe;
         public $id_jugador;
         public $numeroqueparticipa;
@@ -32,16 +31,15 @@ class EquipoJugadorData {
         public $users;
         public $password;
         public $imagen;
-
-
         public $estadoee;
         public $duplicidadee;
         public $fechaee;
         public $orden;
         public $elos ;
+        public $validado;
         public function registro(){
-            $sql = "insert into ".self::$tablename." (jugador,equipo,duplicidad,estado, elo,fecha) ";
-            $sql .= "value (\"$this->jugador\",\"$this->equipo\",\"$this->duplicidad\",1,\"$this->elo\",NOW())";
+            $sql = "insert into ".self::$tablename." (jugador,equipo,duplicidad,estado, elo,fecha,validado) ";
+            $sql .= "value (\"$this->jugador\",\"$this->equipo\",\"$this->duplicidad\",1,\"$this->elo\",NOW(),\"$this->validado\")";
             return Executor::doit($sql);
         }
 
@@ -180,12 +178,17 @@ class EquipoJugadorData {
             return $result->total;
         }
         public static function vercontenidoPaginado1($equipo, $minEdad, $maxEdad, $start, $length, $search = ''){
-            $sql = "SELECT j.*, c.id as id1, e.id as id2, e.estado as estadoe, c.estado as estadoee, 
-                           c.duplicidad as duplicidadee, 
-                           c.fecha as fechaee,   
-                           c.orden,
-                           c.nuevo, 
-                           c.elo as elos,
+                    $sql = "SELECT j.*,
+                                   c.id           AS id1,
+                                   e.id           AS id2,
+                                   e.estado       AS estadoe,
+                                   c.estado       AS estadoee,
+                                   c.duplicidad   AS duplicidadee,
+                                   c.fecha        AS fechaee,
+                                   c.orden,
+                                   c.nuevo,
+                                   c.validado     AS validado,    /* ← LO AÑADIMOS */
+                                   c.elo          AS elos,
                     TIMESTAMPDIFF(YEAR, j.nacimiento, CURDATE()) - (DATE_FORMAT(CURDATE(), '%m%d') < DATE_FORMAT(j.nacimiento, '%m%d')) AS edad_completa 
                     FROM ".self::$tablename." c 
                     JOIN jugador j ON j.id=c.jugador 
@@ -257,6 +260,7 @@ class EquipoJugadorData {
                            c.fecha as fechaee,   
                            c.orden,
                            c.nuevo, 
+                           c.validado     AS validado,    /* ← LO AÑADIMOS */
                            c.elo as elos, 
                            TIMESTAMPDIFF(YEAR, j.nacimiento, CURDATE()) - 
                                (DATE_FORMAT(CURDATE(), '%m%d') < DATE_FORMAT(j.nacimiento, '%m%d')) AS edad_completa 
@@ -364,6 +368,11 @@ class EquipoJugadorData {
 
         public function cambiodenuevo(){
             $sql = "update ".self::$tablename." set nuevo=\"$this->nuevo\" where id=$this->id";
+            Executor::doit($sql);
+        }
+
+        public function cambiodevalidado(){
+            $sql = "update ".self::$tablename." set validado=\"$this->validado\" where id=$this->id";
             Executor::doit($sql);
         }
 

@@ -32,13 +32,14 @@
         public $orden;
         public $total_equipos;
         public $competiciones;
+        public $validado;
         public function registro(){
-            $sql = "insert into ".self::$tablename." (club,nombre,capitan,nacimiento1,subcapitan,nacimiento2,descripcion,usuario,estado,fecha,duplicidad,liga,competicion) ";
-            $sql .= "value (\"$this->club\",\"$this->nombre\",\"$this->capitan\",\"$this->nacimiento1\",\"$this->subcapitan\",\"$this->nacimiento2\",\"$this->descripcion\",\"$this->usuario\",1,NOW(),\"$this->duplicidad\",\"$this->liga\",\"$this->competicion\")";
+            $sql = "insert into ".self::$tablename." (club,nombre,capitan,nacimiento1,subcapitan,nacimiento2,descripcion,usuario,estado,fecha,duplicidad,liga,competicion,validado) ";
+            $sql .= "value (\"$this->club\",\"$this->nombre\",\"$this->capitan\",\"$this->nacimiento1\",\"$this->subcapitan\",\"$this->nacimiento2\",\"$this->descripcion\",\"$this->usuario\",1,NOW(),\"$this->duplicidad\",\"$this->liga\",\"$this->competicion\",\"$this->validado\")";
             return Executor::doit($sql);
         }
         public function actualizar(){
-            $sql = "update ".self::$tablename." set club=\"$this->club\",condicion=\"$this->condicion\",nombre=\"$this->nombre\",capitan=\"$this->capitan\",nacimiento1=\"$this->nacimiento1\",subcapitan=\"$this->subcapitan\",nacimiento2=\"$this->nacimiento2\",descripcion=\"$this->descripcion\",liga=\"$this->liga\",competicion=\"$this->competicion\" where id=$this->id";
+            $sql = "update ".self::$tablename." set club=\"$this->club\",condicion=\"$this->condicion\",nombre=\"$this->nombre\",capitan=\"$this->capitan\",nacimiento1=\"$this->nacimiento1\",subcapitan=\"$this->subcapitan\",nacimiento2=\"$this->nacimiento2\",descripcion=\"$this->descripcion\",liga=\"$this->liga\",competicion=\"$this->competicion\",\"$this->validado\") where id=$this->id";
            return Executor::doit($sql);
         }
         public function actualizar_mequipo(){

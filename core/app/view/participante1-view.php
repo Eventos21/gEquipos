@@ -640,7 +640,6 @@ $(document).ready(function() {
                                 <th>Nº licencia</th>
                                 <th>F. nacimiento</th>
                                 <th>Telefono</th>
-                                <th>Club (Cod)</th>
                                 <th>Federac. (Cod)</th>
                                 <th>Elo</th>
                             </tr>
@@ -715,6 +714,7 @@ $(document).ready(function() {
                         $(row).attr('data-fecha', data.fechaee);
                         $(row).attr('data-elo', data.elo);// Agregar el valor del Elo como atributo
                         $(row).attr('data-nuevo', data.nuevo);  
+                        $(row).attr('data-validado', data.validado);  // <-- aquí
                     }
                 }).on('draw.dt', function() {
                     var rows = $('#dynamicTable tbody tr');
@@ -724,6 +724,11 @@ $(document).ready(function() {
                         handle: 'tr',
                         ghostClass: 'sortable-ghost',
                         onMove: function(evt) {
+                            // Bloquea los jugadores ya validado pora que no se puedan mover
+                            var draggedValidado = $(evt.dragged).attr('data-validado');
+                            if (draggedValidado !== '0') {
+                              return false; // si está validado, no permitimos ni siquiera iniciar el drag
+                            }
                             // Obtener atributos de los elementos arrastrados y objetivo
                             var draggedElo = $(evt.dragged).attr('data-elo');
                             var targetElo = $(evt.related).attr('data-elo');

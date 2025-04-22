@@ -1004,6 +1004,8 @@ if ($actions==37) {
         $actualizar->id=$data->id;
         $actualizar->nuevo=1;
         $actualizar->cambiodenuevo();
+        $actualizar->validado=1;
+        $actualizar->cambiodevalidado();        
     }
     $_SESSION['success_messagea'] = "Enviado a la federación de manera exitosa.";
     header("Location: mequipo");
@@ -1019,6 +1021,8 @@ if ($actions==370) {
         $actualizar->id=$data->id;
         $actualizar->nuevo=1;
         $actualizar->cambiodenuevo();
+        $actualizar->validado=1;
+        $actualizar->cambiodevalidado();
     }
     $_SESSION['success_messagea'] = "Enviado a la federación de manera exitosa.";
     header("Location: mequipo");
