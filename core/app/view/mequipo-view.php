@@ -534,7 +534,7 @@ $contador = $disponible->cantidadequipo - $totalregistro; ?>
                             return '<button class="btn btn-sm btn-warning noinnabilitar jugadores-btn" data-id="' + row.id + '">Observado</button>';
                         }
                         if(data == 6) {
-                            return '<button class="btn btn-sm btn-warning noinnabilitar jugadores-btn" data-id="' + row.id + '">Modificado</button>';
+                            return '<span class="text-warning">Modificado</span>';
                         }
                     }
                 },
@@ -591,8 +591,8 @@ $contador = $disponible->cantidadequipo - $totalregistro; ?>
                 }
             },
             "rowCallback": function(row, data) {
-    // if (data.estado == 2 || data.estado == 4) {
-        if (data.estado == 2) {
+
+        if (data.estado == 2 || data.estado == 4 || data.estado == 6) {
         $(row).addClass('bg-light');
         $('button', row).not('.noinnabilitar').prop('disabled', true); // Deshabilitar todos los botones excepto aquellos con la clase 'noinnabilitar'
     }

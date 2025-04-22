@@ -37,9 +37,10 @@ class EquipoJugadorData {
         public $orden;
         public $elos ;
         public $validado;
+        public $aceptado;
         public function registro(){
-            $sql = "insert into ".self::$tablename." (jugador,equipo,duplicidad,estado, elo,fecha,validado) ";
-            $sql .= "value (\"$this->jugador\",\"$this->equipo\",\"$this->duplicidad\",1,\"$this->elo\",NOW(),\"$this->validado\")";
+            $sql = "insert into ".self::$tablename." (jugador,equipo,duplicidad,estado, elo,fecha,validado,aceptado) ";
+            $sql .= "value (\"$this->jugador\",\"$this->equipo\",\"$this->duplicidad\",1,\"$this->elo\",NOW(),\"$this->validado\",\"$this->aceptado\")";
             return Executor::doit($sql);
         }
 
@@ -58,14 +59,19 @@ class EquipoJugadorData {
             return Model::many($query[0],new EquipoJugadorData());
         }
         public static function vercontenidos($equipo){
-            $sql = "select j.*, c.id as id1 from ".self::$tablename." c JOIN jugador j ON j.id=c.jugador JOIN equipo e ON e.id=c.equipo
-                    JOIN liga l ON l.id=e.liga
-             where c.equipo=$equipo  ";
-            $sql .= " ORDER BY 
-              IF(l.orden = 'desc', j.elo, NULL) DESC, 
-              IF(l.orden = 'libre' or l.orden = '', c.orden, c.orden) ASC";
+            $sql = "SELECT 
+                       j.*, 
+                       c.id        AS id1
+                    FROM ".self::$tablename." c
+                    JOIN jugador j ON j.id = c.jugador
+                    JOIN equipo  e ON e.id = c.equipo
+                    JOIN liga    l ON l.id = e.liga
+                    WHERE c.equipo = $equipo
+                 ORDER BY 
+                   IF(l.orden = 'desc', j.elo, NULL) DESC, 
+                   IF(l.orden = 'libre' OR l.orden = '', c.orden, c.orden) ASC";
             $query = Executor::doit($sql);
-            return Model::many($query[0],new EquipoJugadorData());
+            return Model::many($query[0], new EquipoJugadorData());
         }
         public static function vercontenidos1($equipo){
             $sql = "select * from ".self::$tablename." where equipo=$equipo ";
@@ -188,6 +194,7 @@ class EquipoJugadorData {
                                    c.orden,
                                    c.nuevo,
                                    c.validado     AS validado,    /* ← LO AÑADIMOS */
+                                   c.aceptado     AS aceptado,    /* ← LO AÑADIMOS */
                                    c.elo          AS elos,
                     TIMESTAMPDIFF(YEAR, j.nacimiento, CURDATE()) - (DATE_FORMAT(CURDATE(), '%m%d') < DATE_FORMAT(j.nacimiento, '%m%d')) AS edad_completa 
                     FROM ".self::$tablename." c 
@@ -373,6 +380,11 @@ class EquipoJugadorData {
 
         public function cambiodevalidado(){
             $sql = "update ".self::$tablename." set validado=\"$this->validado\" where id=$this->id";
+            Executor::doit($sql);
+        }
+
+        public function cambiodeaceptado(){
+            $sql = "update ".self::$tablename." set aceptado=\"$this->aceptado\" where id=$this->id";
             Executor::doit($sql);
         }
 

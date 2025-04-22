@@ -398,6 +398,12 @@ $('#customerTable').DataTable({
                                 }
                             }
                         ],
+                        "rowCallback": function(row, data, index) {
+                        // si el jugador ya está validado, pintamos la fila en rojo
+                            if (data.aceptado == 1) {
+                                $(row).addClass('table-danger');
+                            }
+                        },                       
                         "language": {
                             "sProcessing":     "Procesando...",
                             "sLengthMenu":     "Mostrar _MENU_ registros",

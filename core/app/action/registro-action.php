@@ -879,6 +879,13 @@ if ($actions==31) {
         }
     }
     $registro->calificacion_federacion();
+    $datas = EquipoJugadorData::vercontenidos1($_POST['id']);
+    foreach ($datas as $data) {
+        $actualizar = new EquipoJugadorData();
+        $actualizar->id=$data->id;
+        $actualizar->aceptado=1;
+        $actualizar->cambiodeaceptado();        
+    }
     $_SESSION['success_messagea'] = "Actualizado con éxito.";
     header("Location: federacion");
 }
