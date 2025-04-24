@@ -1486,282 +1486,109 @@ if ($actions==52) {
         </tr>';
     }
 }
-if ($actions==53) {
+if ($actions == 53) {
+    ini_set('display_errors', 1);
+    error_reporting(E_ALL);
+
     $competicion = $_POST['competicion'];
-    $liga = $_POST['liga'];
-    $idequipo = $_POST['idequipo_'];
-    $nuevonuero = $_POST['nuevonuero_'];
-// if (isset($_FILES['archivo']) && $_FILES['archivo']['error'] !== UPLOAD_ERR_NO_FILE) {
-//     // Crear un mapeo de nombre de equipo => id
-//     $equipoMap = array_combine($nuevonuero, $idequipo);
+    $liga        = $_POST['liga'];
+    $idequipo    = $_POST['idequipo_'];
+    $nuevonuero  = $_POST['nuevonuero_'];
 
-//     // Leer el archivo Excel
-//     $archivo = $_FILES['archivo']['tmp_name'];
-//     $spreadsheet = IOFactory::load($archivo);
-//     $worksheet = $spreadsheet->getActiveSheet();
-//     $data = $worksheet->toArray();
+    // Si hay un Excel…
+    if (isset($_FILES['archivo']) && $_FILES['archivo']['error'] !== UPLOAD_ERR_NO_FILE) {
+        $equipoMap = array_combine($nuevonuero, $idequipo);
+        $spreadsheet = IOFactory::load($_FILES['archivo']['tmp_name']);
+        $data = $spreadsheet->getActiveSheet()->toArray();
 
-//     // Registro inicial en SalaData
-//     $registro1 = new SalaData();
-//     $ultimoRequerimiento = SalaData::verultimoid();
-//     $cajita = ($ultimoRequerimiento !== null) ? $ultimoRequerimiento + 1 : 1;
-//     $registro1->codigo = $cajita;
-//     $registro1->liga = $liga;
-//     $registro1->competicion = $competicion;
-//     $sala = $registro1->registro1();
+        // 1) Crear SalaData (customizada = 1)
+        $registroSala = new SalaData();
+        $ultimoId     = SalaData::verultimoid();
+        $registroSala->codigo        = $ultimoId !== null ? $ultimoId + 1 : 1;
+        $registroSala->liga          = $liga;
+        $registroSala->competicion   = $competicion;
+        $registroSala->personalizada = 1;
+        $salaRes = $registroSala->registro();
+        $idSala  = $salaRes[1];
 
-//     // Inicializar variables para el seguimiento de la ronda y el encuentro
-//     $ronda_actual = null;
-//     $encuentro = 0;
+        // 2) Recorrer Excel e insertar en sala_personalizada + valor_equipo
+        $ronda_actual = null;
+        $encuentro    = 0;
+        foreach (array_slice($data, 1) as $row) {
+            list($ronda, $fechaRaw, $eqA, $eqB) = $row;
+            $fecha = date('Y-m-d H:i:s', strtotime($fechaRaw));
+            if ($ronda !== $ronda_actual) {
+                $ronda_actual = $ronda;
+                $encuentro    = 1;
+            } else {
+                $encuentro++;
+            }
+            $idA = $equipoMap[$eqA] ?? null;
+            $idB = $equipoMap[$eqB] ?? null;
 
-//     // Procesar cada fila del archivo Excel (omitimos la primera fila si tiene cabecera)
-//     for ($i = 1; $i < count($data); $i++) {
-//         $row = $data[$i];
-//         $ronda = $row[0];
-//         $fecha = date('Y-m-d', strtotime($row[1])); // Convertir a formato Y-m-d
-//         $equipoA = $row[2];
-//         $equipoB = $row[3];
+            // inserto en sala_personalizada
+            $sp = new SalaPersonalizadaData();
+            $sp->sala             = $idSala;
+            $sp->ronda            = $ronda;
+            $sp->encuentro        = $encuentro;
+            $sp->fecha            = $fecha;
+            $sp->equipo_competidor= $eqA;
+            $sp->equipo_rival     = $eqB;
+            $sp->id_competidor    = $idA;
+            $sp->id_rival         = $idB;
+            $sp->registro();
 
-//         // Obtener id_competidor e id_rival
-//         $id_competidor = $equipoMap[$equipoA] ?? null;
-//         $id_rival = $equipoMap[$equipoB] ?? null;
-
-//         // Verificar si hemos cambiado de ronda
-//         if ($ronda_actual !== $ronda) {
-//             $ronda_actual = $ronda;
-//             $encuentro = 1; // Reiniciar el contador de encuentros para la nueva ronda
-//         } else {
-//             $encuentro++; // Incrementar el contador de encuentros dentro de la misma ronda
-//         }
-//         // Registrar en SalaPersonalizadaData
-//         $registro1 = new SalaPersonalizadaData();
-//         $registro1->sala = $sala[1];
-//         $registro1->ronda = $ronda;
-//         $registro1->fecha = $fecha;
-//         $registro1->equipo_competidor = $equipoA;
-//         $registro1->equipo_rival = $equipoB;
-//         $registro1->id_competidor = $id_competidor;
-//         $registro1->id_rival = $id_rival;
-//         $registro1->encuentro = $encuentro;
-//         $registro1->registro();
-
-//         $registro2 = new ValorData();
-//         $registro2->sala = $sala[1];
-//         $registro2->equipo=$idequipo;
-//         $registro2->valor=$valor;
-//         $registro2->registro();
-//     }
-
-//     echo "Datos importados y registrados correctamente.";
-//     header("Location: emparejamientos");
-// }
-// Obtener los datos de POST
-// $competicion = $_POST['competicion'];
-// $liga = $_POST['liga'];
-// $idequipo = $_POST['idequipo_'];
-// $nuevonuero = $_POST['nuevonuero_'];
-
-// // Verificar si se subió un archivo
-// if (isset($_FILES['archivo']) && $_FILES['archivo']['error'] !== UPLOAD_ERR_NO_FILE) {
-//     // Crear un mapeo de nombre de equipo => id
-//     $equipoMap = array_combine($nuevonuero, $idequipo);
-
-//     // Leer el archivo Excel
-//     $archivo = $_FILES['archivo']['tmp_name'];
-//     $spreadsheet = IOFactory::load($archivo);
-//     $worksheet = $spreadsheet->getActiveSheet();
-//     $data = $worksheet->toArray();
-
-//     // Registro inicial en SalaData
-//     $registro1 = new SalaData();
-//     $ultimoRequerimiento = SalaData::verultimoid();
-//     $cajita = ($ultimoRequerimiento !== null) ? $ultimoRequerimiento + 1 : 1;
-//     $registro1->codigo = $cajita;
-//     $registro1->liga = $liga;
-//     $registro1->competicion = $competicion;
-//     $sala = $registro1->registro1();
-
-//     // Inicializar variables para el seguimiento de la ronda y el encuentro
-//     $ronda_actual = null;
-//     $encuentro = 0;
-
-//     // Procesar cada fila del archivo Excel (omitimos la primera fila si tiene cabecera)
-//     for ($i = 1; $i < count($data); $i++) {
-//         $row = $data[$i];
-//         $ronda = $row[0];
-//         $fecha = date('Y-m-d', strtotime($row[1])); // Convertir a formato Y-m-d
-//         $equipoA = $row[2];
-//         $equipoB = $row[3];
-
-//         // Obtener id_competidor e id_rival
-//         $id_competidor = $equipoMap[$equipoA] ?? null;
-//         $id_rival = $equipoMap[$equipoB] ?? null;
-
-//         // Verificar si hemos cambiado de ronda
-//         if ($ronda_actual !== $ronda) {
-//             $ronda_actual = $ronda;
-//             $encuentro = 1; // Reiniciar el contador de encuentros para la nueva ronda
-//         } else {
-//             $encuentro++; // Incrementar el contador de encuentros dentro de la misma ronda
-//         }
-
-//         // Registrar en SalaPersonalizadaData
-//         $registro1 = new SalaPersonalizadaData();
-//         $registro1->sala = $sala[1];
-//         $registro1->ronda = $ronda;
-//         $registro1->fecha = $fecha;
-//         $registro1->equipo_competidor = $equipoA;
-//         $registro1->equipo_rival = $equipoB;
-//         $registro1->id_competidor = $id_competidor;
-//         $registro1->id_rival = $id_rival;
-//         $registro1->encuentro = $encuentro;
-//         $registro1->registro();
-
-//         // Verificar y registrar para el equipo competidor
-//         $duplicados_competidor = ValorData::duplicidad($sala[1], $id_competidor);
-//         if (count($duplicados_competidor) === 0) {
-//             $registro2 = new ValorData();
-//             $registro2->sala = $sala[1];
-//             $registro2->equipo = $id_competidor;
-//             $registro2->valor = $equipoA;
-//             $registro2->registro();
-//         }
-
-//         // Verificar y registrar para el equipo rival
-//         $duplicados_rival = ValorData::duplicidad($sala[1], $id_rival);
-//         if (count($duplicados_rival) === 0) {
-//             $registro2 = new ValorData();
-//             $registro2->sala = $sala[1];
-//             $registro2->equipo = $id_rival;
-//             $registro2->valor = $equipoA;
-//             $registro2->registro();
-//         }
-//     }
-
-//     echo "Datos importados y registrados correctamente.";
-//     // header("Location: emparejamientos");
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-if (isset($_FILES['archivo']) && $_FILES['archivo']['error'] !== UPLOAD_ERR_NO_FILE) {
-    // Crear un mapeo de nombre de equipo => id
-    $equipoMap = array_combine($nuevonuero, $idequipo);
-
-    // Leer el archivo Excel
-    $archivo = $_FILES['archivo']['tmp_name'];
-    $spreadsheet = IOFactory::load($archivo);
-    $worksheet = $spreadsheet->getActiveSheet();
-    $data = $worksheet->toArray();
-
-    // Registro inicial en SalaData
-    $registro1 = new SalaData();
-    $ultimoRequerimiento = SalaData::verultimoid();
-    $cajita = ($ultimoRequerimiento !== null) ? $ultimoRequerimiento + 1 : 1;
-    $registro1->codigo = $cajita;
-    $registro1->liga = $liga;
-    $registro1->competicion = $competicion;
-    $sala = $registro1->registro1();
-
-    // Inicializar variables para el seguimiento de la ronda y el encuentro
-    $ronda_actual = null;
-    $encuentro = 0;
-
-    // Crear una instancia para el registro de valores únicos
-    $registro = new ValorData();
-
-    // Procesar cada fila del archivo Excel (omitimos la primera fila si tiene cabecera)
-    for ($i = 1; $i < count($data); $i++) {
-        $row = $data[$i];
-        $ronda = $row[0];
-        // $fecha = date('Y-m-d', strtotime($row[1])); // Convertir a formato Y-m-d
-        $fecha = date('Y-m-d H:i:s', strtotime($row[1]));
-        $equipoA = $row[2];
-        $equipoB = $row[3];
-
-        // Obtener id_competidor e id_rival
-        $id_competidor = $equipoMap[$equipoA] ?? null;
-        $id_rival = $equipoMap[$equipoB] ?? null;
-
-        // Verificar si hemos cambiado de ronda
-        if ($ronda_actual !== $ronda) {
-            $ronda_actual = $ronda;
-            $encuentro = 1; // Reiniciar el contador de encuentros para la nueva ronda
-        } else {
-            $encuentro++; // Incrementar el contador de encuentros dentro de la misma ronda
+            // inserto en valor_equipo
+            if ($idA) {
+                $ve = new ValorEquipoData();
+                $ve->liga        = $liga;
+                $ve->competicion = $competicion;
+                $ve->sala        = $idSala;
+                $ve->equipo      = $idA;
+                $ve->valor       = $eqA;
+                $ve->registro();
+            }
+            if ($idB) {
+                $ve = new ValorEquipoData();
+                $ve->liga        = $liga;
+                $ve->competicion = $competicion;
+                $ve->sala        = $idSala;
+                $ve->equipo      = $idB;
+                $ve->valor       = $eqB;
+                $ve->registro();
+            }
         }
 
-        // Registrar en SalaPersonalizadaData
-        $registro1 = new SalaPersonalizadaData();
-        $registro1->sala = $sala[1];
-        $registro1->ronda = $ronda;
-        $registro1->fecha = $fecha;
-        $registro1->equipo_competidor = $equipoA;
-        $registro1->equipo_rival = $equipoB;
-        $registro1->id_competidor = $id_competidor;
-        $registro1->id_rival = $id_rival;
-        $registro1->encuentro = $encuentro;
-        $registro1->registro();
-
-        // Registrar valores únicos en datosdelquipo
-        if ($id_competidor && count(ValorData::duplicidad($equipoA, $sala[1])) == 0) {
-            $registro->valor = $equipoA;
-            $registro->sala = $sala[1];
-            $registro->equipo = $id_competidor;
-            $registro->registro();
-        }
-
-        if ($id_rival && count(ValorData::duplicidad($equipoB, $sala[1])) == 0) {
-            $registro->valor = $equipoB;
-            $registro->sala = $sala[1];
-            $registro->equipo = $id_rival;
-            $registro->registro();
-        }
-    }
-
-    echo "Datos importados y registrados correctamente.";
-    header("Location: emparejamientos");
-}
-
- else {
-        // echo "sin archivo";
-        
-
-        $registro1 = new SalaData();
-        $cajita = 0;
-        $ultimoRequerimiento = SalaData::verultimoid();
-        if ($ultimoRequerimiento !== null) {
-             $cajita= $ultimoRequerimiento+1;
-         } else {
-            $cajita=1;
-        }
-        echo "$cajita";
-        $registro1->codigo = $cajita;
-        $registro1->liga=$liga;
-        $registro1->competicion=$competicion;
-        $sala=$registro1->registro();
-
-        for ($i=0; $i < count($idequipo); $i++) { 
-            $registro = new ValorEquipoData();
-            $registro->liga=$liga;
-            $registro->equipo= $idequipo[$i];
-            $registro->valor= $nuevonuero[$i];
-            $registro->sala= $sala[1];
-            $registro->competicion= $competicion;
-            $registro->registro();
-        }
+        $_SESSION['success_messagea'] = "Sala personalizada importada correctamente.";
         header("Location: emparejamientos");
+        exit;
     }
+
+    // Rama manual (sin Excel)
+    $registroSala = new SalaData();
+    $ultimoId     = SalaData::verultimoid();
+    $registroSala->codigo        = $ultimoId !== null ? $ultimoId + 1 : 1;
+    $registroSala->liga          = $liga;
+    $registroSala->competicion   = $competicion;
+    $registroSala->personalizada = 0;
+    $salaRes = $registroSala->registro();
+    $idSala  = $salaRes[1];
+
+    foreach ($idequipo as $i => $idEqui) {
+        $ve = new ValorEquipoData();
+        $ve->liga        = $liga;
+        $ve->competicion = $competicion;
+        $ve->sala        = $idSala;
+        $ve->equipo      = $idEqui;
+        $ve->valor       = $nuevonuero[$i];
+        $ve->registro();
+    }
+
+    $_SESSION['success_messagea'] = "Sala creada y valores asignados correctamente.";
+    header("Location: emparejamientos");
+    exit;
 }
+
 if ($actions==54) {
     $registro = new SalaPersonalizadaData();
     foreach ($_POST as $k => $v) {
@@ -2009,65 +1836,91 @@ if ($actions == 64) {
     header("Location: clasificacions");
 }
 if ($actions == 65) {
-    if (isset($_FILES['archivo']) && $_FILES['archivo']['error'] !== UPLOAD_ERR_NO_FILE) {
-        $archivo = $_FILES['archivo']['tmp_name'];
-        $sala = $_POST['sala'];
+    // 1) Mostrar errores mientras depuras
+    ini_set('display_errors', 1);
+    error_reporting(E_ALL);
 
-        // Leer el archivo Excel
-        $spreadsheet = IOFactory::load($archivo);
-        $worksheet = $spreadsheet->getActiveSheet();
-        $data = $worksheet->toArray();
-
-        // Obtener los valores registrados en la base de datos para la sala especificada
-        $valoresRegistrados = ValorData::vercontenidos($sala);
-
-        // Crear un mapeo de valor => id_equipo
-        $mapaValoresRegistrados = [];
-        foreach ($valoresRegistrados as $valor) {
-            $mapaValoresRegistrados[$valor->valor] = $valor->equipo;
-        }
-
-        // Inicializar variables para el seguimiento de la ronda y el encuentro
-        $ronda_actual = null;
-        $encuentro = 0;
-        // Procesar cada fila del archivo Excel (omitimos la primera fila si tiene cabecera)
-        for ($i = 1; $i < count($data); $i++) {
-            $row = $data[$i];
-            $ronda = $row[0];
-            // $fecha = date('Y-m-d', strtotime($row[1]));
-            $fecha = date('Y-m-d H:i:s', strtotime($row[1]));
-            $equipoA = $row[2];
-            $equipoB = $row[3];
-
-            // Verificar si hemos cambiado de ronda
-            if ($ronda_actual !== $ronda) {
-                $ronda_actual = $ronda;
-                $encuentro = 1; // Reiniciar el contador de encuentros para la nueva ronda
-            } else {
-                $encuentro++; // Incrementar el contador de encuentros dentro de la misma ronda
-            }
-
-            // Obtener el id_competidor y id_rival de los valores registrados
-            $id_competidor = $mapaValoresRegistrados[$equipoA] ?? null;
-            $id_rival = $mapaValoresRegistrados[$equipoB] ?? null;
-
-            // Registrar en SalaPersonalizadaData
-            $registro1 = new SalaPersonalizadaData();
-            $registro1->sala = $sala;
-            $registro1->ronda = $ronda;
-            $registro1->encuentro = $encuentro;
-            $registro1->fecha = $fecha;
-            $registro1->equipo_competidor = $equipoA;
-            $registro1->equipo_rival = $equipoB;
-            $registro1->id_competidor = $id_competidor;
-            $registro1->id_rival = $id_rival;
-            $registro1->registro();
-        }
-
-        echo "Datos importados y registrados correctamente.";
+    // 2) Recuperar la sala y validar el archivo
+    $sala = intval($_POST['sala']);
+    if (empty($_FILES['archivo']) || $_FILES['archivo']['error'] === UPLOAD_ERR_NO_FILE) {
+        $_SESSION['success_messagea1'] = "No se ha seleccionado ningún archivo.";
         header("Location: emparejamientos");
+        exit;
     }
+
+    // 3) Leer el Excel
+    $tmpName    = $_FILES['archivo']['tmp_name'];
+    $spreadsheet= \PhpOffice\PhpSpreadsheet\IOFactory::load($tmpName);
+    $sheet      = $spreadsheet->getActiveSheet();
+    $data       = $sheet->toArray();
+
+    // 4) Construir mapa número→id_equipo para esta sala
+    $equipoMap = [];
+    $valores   = ValorEquipoData::vercontenido_sala($sala);
+    foreach ($valores as $ve) {
+        // $ve->valor = el número que tú estableciste, $ve->equipo = id real
+        $equipoMap[$ve->valor] = $ve->equipo;
+    }
+
+    // 5) Recorrer el Excel (saltamos la fila 0 si es cabecera)
+    $ronda_actual = null;
+    $encuentro    = 0;
+    for ($i = 1; $i < count($data); $i++) {
+        // Desempaquetamos columnas [0]=ronda, [1]=fecha, [2]=numA, [3]=numB
+        list($ronda, $fechaRaw, $numA, $numB) = $data[$i];
+        $fecha = date('Y-m-d H:i:s', strtotime($fechaRaw));
+
+        // Calcular conteo de encuentro
+        if ($ronda_actual !== $ronda) {
+            $ronda_actual = $ronda;
+            $encuentro    = 1;
+        } else {
+            $encuentro++;
+        }
+
+        // Traducir número a id
+        $id_competidor = $equipoMap[$numA] ?? 0;
+        $id_rival      = $equipoMap[$numB] ?? 0;
+
+        // 6) ¿Existe ya un registro para esta sala+ronda+encuentro?
+        $sql0 = "SELECT id 
+                   FROM sala_personalizada 
+                  WHERE sala={$sala}
+                    AND ronda={$ronda}
+                    AND encuentro={$encuentro}";
+        $res0 = Executor::doit($sql0);
+        $row0 = $res0[0]->fetch_array();
+
+        if ($row0) {
+            // 7a) Sí: lo actualizamos
+            $idRegistro = $row0['id'];
+            $sqlUpd = "UPDATE sala_personalizada
+                          SET id_competidor={$id_competidor},
+                              id_rival     ={$id_rival},
+                              fecha        ='{$fecha}'
+                        WHERE id = {$idRegistro}";
+            Executor::doit($sqlUpd);
+
+        } else {
+            // 7b) No existía: lo insertamos
+            $sp = new SalaPersonalizadaData();
+            $sp->sala           = $sala;
+            $sp->ronda          = $ronda;
+            $sp->encuentro      = $encuentro;
+            $sp->fecha          = $fecha;
+            $sp->equipo_competidor = $numA;  // para mostrar en CSV
+            $sp->equipo_rival      = $numB;
+            $sp->id_competidor     = $id_competidor;
+            $sp->id_rival          = $id_rival;
+            $sp->registro();
+        }
+    }
+
+    $_SESSION['success_messagea'] = "Jornada importada/actualizada correctamente.";
+    header("Location: emparejamientos");
+    exit;
 }
+
 if ($actions==66) {
     try {
         $mysqli->begin_transaction();
