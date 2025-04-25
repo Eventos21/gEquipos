@@ -1504,6 +1504,7 @@ if ($actions == 53) {
         // 1) Crear SalaData (customizada = 1)
         $registroSala = new SalaData();
         $ultimoId     = SalaData::verultimoid();
+        $registroSala->personalizada = 1;
         $registroSala->codigo        = $ultimoId !== null ? $ultimoId + 1 : 1;
         $registroSala->liga          = $liga;
         $registroSala->competicion   = $competicion;

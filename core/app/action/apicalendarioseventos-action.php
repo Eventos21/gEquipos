@@ -1,3 +1,4 @@
+
 <?php
 if ($_GET['action'] == 'apicalendarioseventos') {
     $datos = SalaPersonalizadaData::eventoslista();

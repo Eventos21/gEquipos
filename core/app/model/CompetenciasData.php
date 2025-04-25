@@ -1,3 +1,4 @@
+
 <?php
 class CompetenciasData {
     public static $tablename = "competencias";
@@ -350,11 +351,11 @@ class CompetenciasData {
             return Model::many($query[0],new CompetenciasData());
         }
         public static function vertotalmax($liga) {
-		    $sql = "SELECT MAX(id) as max_id FROM " . self::$tablename . " WHERE liga=$liga";
-		    $query = Executor::doit($sql);
-		    $result = Model::one($query[0], new CompetenciasData());
-		    return $result ? $result->max_id : null;
-		}
+            $sql = "SELECT MAX(id) as max_id FROM " . self::$tablename . " WHERE liga=$liga";
+            $query = Executor::doit($sql);
+            $result = Model::one($query[0], new CompetenciasData());
+            return $result ? $result->max_id : null;
+        }
         public static function duplicidad($sala,$fecha_encuentro){
         $sql = "select * from ".self::$tablename." where sala=\"$sala\" and fecha_encuentro=\"$fecha_encuentro\" ";
         $query = Executor::doit($sql);

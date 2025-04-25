@@ -1,3 +1,4 @@
+
 <?php
 class SalaPersonalizadaData {
     public static $tablename = "sala_personalizada";

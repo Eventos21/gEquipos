@@ -1,3 +1,4 @@
+
 <?php
 class SalaData {
     public static $tablename = "sala";
