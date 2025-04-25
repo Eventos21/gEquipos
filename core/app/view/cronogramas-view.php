@@ -166,38 +166,99 @@
                                     success: function(response) {
                                         $('#detailsTableBody').empty();
 
-                                        $.each(response.data, function(groupName, events) {
-                                        $.each(events, function(index, event) {
-                                            var row = `<tr>
-                                                <td>${index + 1}</td>
-                                                <td>${event.equipoa} vs ${event.equipob}</td>
-                                                <td>${event.resultado_a} - ${event.resultado_b}</td>
-                                                <td>${event.usuarios}</td>
-                                                <td>${event.aprobacion}</td>`;
-                                            
-                                            // Agregar la celda de acuerdo al valor de 'adicional'
-                                            if (event.adicional == 1) {
-                                                row += `<td>
-                                                            <form action="actasi" method="post">
-                                                                <input style="font-size: 9px" type="hidden" class="form-control" name="tid" value="${event.id}">
-                                                                <button class="btn btn-light btn-sm" type="submit">Acta</button>
-                                                            </form>
-                                                        </td>`;
-                                            } else if (event.adicional == 2) {
-                                                row += `<td>
-                                                            <form action="actai" method="post">
-                                                                <input style="font-size: 9px" type="hidden" class="form-control" name="competiciones" value="${event.id}">
-                                                                <input style="font-size: 9px" type="hidden" class="form-control" name="equipo_a" value="${event.equipo_a}">
-                                                                <input style="font-size: 9px" type="hidden" class="form-control" name="equipo_b" value="${event.equipo_b}">
-                                                                <button class="btn btn-light btn-sm" type="submit">Acta</button>
-                                                            </form>
-                                                        </td>`;
-                                            }
+                                $('#detailsTableBody').empty();
 
-                                            row += `</tr>`;
-                                            $('#detailsTableBody').append(row);
-                                        });
+                                let eventosPorSala = {};
+
+                                // Agrupar eventos por sala
+                                $('#detailsTableBody').empty();
+
+                                $.each(response.data, function(groupKey, events) {
+                                    if (!Array.isArray(events) || events.length === 0) return;
+
+                                    let nombregrupo = events[0].nombregrupo;
+                                    let grupo = events[0].grupo;
+                                    let claveAgrupacion = `Categoría: ${nombregrupo} - Grupo: ${grupo}`;
+
+                                    // Cabecera de bloque
+                                    let header = `<tr><td colspan="6" class="text-start fw-bold bg-light text-dark">${claveAgrupacion}</td></tr>`;
+                                    $('#detailsTableBody').append(header);
+
+                                    $.each(events, function(index, event) {
+                                        let row = `<tr>
+                                            <td>${index + 1}</td>
+                                            <td>${event.equipoa} vs ${event.equipob}</td>
+                                            <td>${event.resultado_a} - ${event.resultado_b}</td>
+                                            <td>${event.usuarios}</td>
+                                            <td>${event.aprobacion}</td>`;
+
+                                        if (event.adicional == 1) {
+                                            row += `<td>
+                                                        <form action="actasi" method="post">
+                                                            <input type="hidden" name="tid" value="${event.id}">
+                                                            <button class="btn btn-light btn-sm" type="submit">Acta</button>
+                                                        </form>
+                                                    </td>`;
+                                        } else if (event.adicional == 2) {
+                                            row += `<td>
+                                                        <form action="actai" method="post">
+                                                            <input type="hidden" name="competiciones" value="${event.id}">
+                                                            <input type="hidden" name="equipo_a" value="${event.equipo_a}">
+                                                            <input type="hidden" name="equipo_b" value="${event.equipo_b}">
+                                                            <button class="btn btn-light btn-sm" type="submit">Acta</button>
+                                                        </form>
+                                                    </td>`;
+                                        } else {
+                                            row += `<td>-</td>`;
+                                        }
+
+                                        row += `</tr>`;
+                                        $('#detailsTableBody').append(row);
                                     });
+                                });
+
+                                $('#ModalJornada').modal('show');
+
+
+                                // Renderizar por sala
+                                $.each(eventosPorSala, function(sala, eventos) {
+                                    // Cabecera de sala
+                                    let header = `<tr><td colspan="6" class="text-start fw-bold bg-light text-dark">${claveAgrupacion}</td></tr>`;
+                                    $('#detailsTableBody').append(header);
+
+                                    $.each(eventos, function(index, event) {
+                                        var row = `<tr>
+                                            <td>${index + 1}</td>
+                                            <td>${event.equipoa} vs ${event.equipob}</td>
+                                            <td>${event.resultado_a} - ${event.resultado_b}</td>
+                                            <td>${event.usuarios}</td>
+                                            <td>${event.aprobacion}</td>`;
+
+                                        if (event.adicional == 1) {
+                                            row += `<td>
+                                                        <form action="actasi" method="post">
+                                                            <input style="font-size: 9px" type="hidden" name="tid" value="${event.id}">
+                                                            <button class="btn btn-light btn-sm" type="submit">Acta</button>
+                                                        </form>
+                                                    </td>`;
+                                        } else if (event.adicional == 2) {
+                                            row += `<td>
+                                                        <form action="actai" method="post">
+                                                            <input style="font-size: 9px" type="hidden" name="competiciones" value="${event.id}">
+                                                            <input style="font-size: 9px" type="hidden" name="equipo_a" value="${event.equipo_a}">
+                                                            <input style="font-size: 9px" type="hidden" name="equipo_b" value="${event.equipo_b}">
+                                                            <button class="btn btn-light btn-sm" type="submit">Acta</button>
+                                                        </form>
+                                                    </td>`;
+                                        } else {
+                                            row += `<td>-</td>`;
+                                        }
+
+                                        row += `</tr>`;
+                                        $('#detailsTableBody').append(row);
+                                    });
+                                });
+
 
 
                                         $('#ModalJornada').modal('show');

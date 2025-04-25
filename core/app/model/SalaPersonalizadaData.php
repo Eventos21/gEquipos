@@ -2,6 +2,7 @@
 <?php
 class SalaPersonalizadaData {
     public static $tablename = "sala_personalizada";
+        public $grupo; // <- NUEVA propiedad para evitar deprecated en PHP 8.2+
         public $id;
         public $sala;
         public $ronda;
@@ -179,6 +180,7 @@ class SalaPersonalizadaData {
             $sql = "SELECT sp.*, 
                        '1' AS adicional,
                        c.nombregrupo, 
+                       c.grupo, 
                        u.ci as usuarios,
                        IF(sp.id_competidor = 0, 'Sin equipo', COALESCE(e.nombre, 'Sin equipo')) AS equipoa, 
                        IF(sp.id_rival = 0, 'Sin equipo', COALESCE(e1.nombre, 'Sin equipo')) AS equipob  

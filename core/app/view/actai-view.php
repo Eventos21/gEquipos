@@ -207,7 +207,7 @@ $siesdivision = $divi;
                                         <i class="ri-arrow-go-back-line me-2"></i>
                                         <span>Volver</span>
                                     </a> -->
-                                    <a href="jornadai" class="btn btn-gradient btn-lg d-flex align-items-center justify-content-center shadow-lg" style="border-radius: 50px; padding: 1px 5px; text-transform: uppercase; font-weight: bold; background: linear-gradient(45deg, #007bff, #00d4ff); color: white; transition: all 0.3s ease;">
+                                    <a href="cronogramas" class="btn btn-gradient btn-lg d-flex align-items-center justify-content-center shadow-lg" style="border-radius: 50px; padding: 1px 5px; text-transform: uppercase; font-weight: bold; background: linear-gradient(45deg, #007bff, #00d4ff); color: white; transition: all 0.3s ease;">
                                         <i class="ri-arrow-go-back-line me-2" style="font-size: 20px;"></i>
                                         <span>Volver Valor</span>
                                     </a>

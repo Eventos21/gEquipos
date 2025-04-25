@@ -1,4 +1,3 @@
-
 <?php 
 if (isset($_GET['action']) && $_GET['action'] == 'apilistareventos') {
     header('Content-Type: application/json');
@@ -9,16 +8,20 @@ if (isset($_GET['action']) && $_GET['action'] == 'apilistareventos') {
     $competitions = array();
 
     foreach ($data as $row) {
-        if (!isset($competitions[$row->nombregrupo])) {
-            $competitions[$row->nombregrupo] = array();
+        // Agrupar por nombregrupo + grupo
+        $clave = $row->nombregrupo . '||' . $row->grupo;
+
+        if (!isset($competitions[$clave])) {
+            $competitions[$clave] = array();
         }
 
         $resultado_a = $row->puntajea ?? 0;
         $resultado_b = $row->puntajeb ?? 0;
 
-        $competitions[$row->nombregrupo][] = array(
+        $competitions[$clave][] = array(
             'tipo' => 'SalaPersonalizada', // Identificar el origen
             'nombregrupo' => $row->nombregrupo,
+            'grupo' => $row->grupo,
             'sala' => $row->sala,
             'ronda' => $row->ronda,
             'encuentro' => $row->encuentro,
@@ -51,16 +54,20 @@ if (isset($_GET['action']) && $_GET['action'] == 'apilistareventos') {
     $data1 = SalaData::vercontenidos3_3($fecha);
 
     foreach ($data1 as $row) {
-        if (!isset($competitions[$row->nombregrupo])) {
-            $competitions[$row->nombregrupo] = array();
+        // Agrupar por nombregrupo + grupo
+        $clave = $row->nombregrupo . '||' . $row->grupo;
+
+        if (!isset($competitions[$clave])) {
+            $competitions[$clave] = array();
         }
 
         $resultado_a = $row->resultado_a ?? 0;
         $resultado_b = $row->resultado_b ?? 0;
 
-        $competitions[$row->nombregrupo][] = array(
+        $competitions[$clave][] = array(
             'tipo' => 'Sala', // Identificar el origen
             'nombregrupo' => $row->nombregrupo,
+            'grupo' => $row->grupo,
             'competicion' => $row->competicion,
             'sala_codigo' => $row->sala_codigo,
             'equipo_a' => $row->equipo_a,
@@ -87,4 +94,4 @@ if (isset($_GET['action']) && $_GET['action'] == 'apilistareventos') {
     echo json_encode($response);
     exit;
 }
- ?>
+?>
