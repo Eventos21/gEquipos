@@ -43,9 +43,9 @@
                                             <th width="5px">Nº</th>
                                             <th>Equipo</th>
                                             <th>Puntos</th>
-                                            <th>Progresivo</th>
                                             <th>Buchholz -1</th>
                                             <th>Buchholz</th>
+                                            <th>Progresivo</th>
                                             <th>Mediano Buchholz</th>
                                             <th>Olímpico</th>
                                         </tr>
@@ -86,9 +86,9 @@
                                             <th width="5px">Nº</th>
                                             <th>Equipo</th>
                                             <th>Puntos</th>
-                                            <th>Progresivo</th>
                                             <th>Buchholz -1</th>
                                             <th>Buchholz</th>
+                                            <th>Progresivo</th>
                                             <th>Mediano Buchholz</th>
                                             <th>Olímpico</th>
                                         </tr>
@@ -129,11 +129,11 @@
                                             <th width="5px">Nº</th>
                                             <th>Equipo</th>
                                             <th>Puntos</th>
-                                            <th>Progresivo</th>
-                                            <th>Buchholz -1</th>
+                                            <th>Buchholz -1</th>                                            
                                             <th>Buchholz</th>
                                             <th>Mediano Buchholz</th>
                                             <th>Olímpico</th>
+                                            <th>Progresivo</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -172,11 +172,11 @@
                                             <th width="5px">Nº</th>
                                             <th>Equipo</th>
                                             <th>Puntos</th>
-                                            <th>Progresivo</th>
-                                            <th>Buchholz -1</th>
+                                            <th>Buchholz -1</th>                                            
                                             <th>Buchholz</th>
                                             <th>Mediano Buchholz</th>
                                             <th>Olímpico</th>
+                                            <th>Progresivo</th>
                                         </tr>
                                     </thead>
                                     <tbody>
