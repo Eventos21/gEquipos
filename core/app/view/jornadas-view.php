@@ -1,3 +1,4 @@
+
 <?php 
 if (isset($_SESSION["conticomtc"]) && isset($_SESSION["typeuser"]) && ($_SESSION["typeuser"] == 1 || $_SESSION["typeuser"] == 2)) {
 if ($_SESSION["typeuser"]==1) {
@@ -262,12 +263,30 @@ if ($_SESSION["typeuser"]==2) {
         });
         $("#calendar").flatpickr({
             defaultDate: getTodayDate(),
+            locale: {
+                firstDayOfWeek: 1,
+                weekdays: {
+                    shorthand: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+                    longhand: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
+                },
+                months: {
+                    shorthand: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    longhand: [
+                        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+                    ]
+                }
+            },
             onChange: function(selectedDates, dateStr, instance) {
                 if (table) {
                     table.ajax.reload();
                 }
             }
         });
+
+        // Forzar recarga inicial al cargar con la fecha de hoy
+        table.ajax.reload();
+
         function getTodayDate() {
             var today = new Date();
             var dd = String(today.getDate()).padStart(2, '0');

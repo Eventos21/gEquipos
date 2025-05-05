@@ -616,6 +616,29 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
                 }
             ],
+            buttons: [
+                {
+                    extend: 'copy',
+                    text: 'Copiar',
+                    titleAttr: 'Copiar al portapapeles'
+                },
+                {
+                    extend: 'csv',
+                    text: 'CSV',
+                    titleAttr: 'Exportar como CSV'
+                },
+                {
+                    extend: 'excel',
+                    text: 'Excel',
+                    titleAttr: 'Exportar como Excel'
+                },
+                {
+                    extend: 'print',
+                    text: 'Imprimir',
+                    titleAttr: 'Imprimir'
+                }
+            ],
+
             "language": {
                 "sProcessing":     "Procesando...",
                 "sLengthMenu":     "Mostrar _MENU_ registros",
@@ -639,6 +662,8 @@ document.addEventListener("DOMContentLoaded", function() {
                     "sSortDescending": ": Activar para ordenar la columna de manera descendente"
                 }
             },
+            dom: '<"top d-flex justify-content-between align-items-center mb-2"<"dt-length text-start"l><"dt-buttons text-center"B><"dt-filter text-end"f>>rt<"bottom"ip>',
+
             "rowCallback": function(row, data) {
     if (data.estado == 2 || data.estado == 4) {
         $(row).addClass('bg-light');

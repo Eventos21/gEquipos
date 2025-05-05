@@ -168,10 +168,39 @@ if (
                     "sSortDescending": ": Activar para ordenar la columna de manera descendente"
                 }
             },
-            dom: '<"top"lf><"bottom"B>rt<"bottom"ip>',
+            dom: '<"top d-flex justify-content-between align-items-center mb-2"<"dt-length text-start"l><"dt-buttons text-center"B><"dt-filter text-end"f>>rt<"bottom"ip>',
             buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print',
-                ]
+                {
+                    extend: 'copy',
+                    text: 'Copiar',
+                    titleAttr: 'Copiar al portapapeles',
+                    className: 'btn btn-light',
+                    action: function (e, dt, button, config) {
+                        $.fn.dataTable.ext.buttons.copyHtml5.action.call(this, e, dt, button, config);
+                        setTimeout(function () {
+                            $('.dt-button-info')
+                                .addClass('text-dark bg-light border rounded p-3')
+                                .css({'top': '60%', 'left': '50%', 'transform': 'translate(-50%, -50%)'})
+                                .html('<strong>Copiado al portapapeles</strong><br>' + dt.rows({ selected: true }).count() + ' filas copiadas');
+                        }, 10);
+                    }
+                },
+                {
+                    extend: 'csv',
+                    text: 'CSV',
+                    titleAttr: 'Exportar como CSV'
+                },
+                {
+                    extend: 'excel',
+                    text: 'Excel',
+                    titleAttr: 'Exportar como Excel'
+                },
+                {
+                    extend: 'print',
+                    text: 'Imprimir',
+                    titleAttr: 'Imprimir'
+                },
+            ]
         });
        $('#customerTable').on('click', '.edit-btn', function() {
             let id = $(this).data('id');

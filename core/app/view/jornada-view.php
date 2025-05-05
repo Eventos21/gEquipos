@@ -68,7 +68,7 @@ if ($_SESSION["typeuser"]==2) {
                             <input type="text" id="calendar" placeholder="Selecciona una fecha" style="margin-bottom: 20px;">
                             <table id="customerTable" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
                                 <thead> 
-                                    <tr>
+                                    <tr class="table-primary">
                                         <th width="5px">Nº</th>
                                         <th>Emparejamiento</th>
                                         <th>Resultado</th>
@@ -257,20 +257,64 @@ if ($_SESSION["typeuser"]==2) {
                     }
                 } <?php } ?>
             ],
+            "language": {
+                "sProcessing":     "Procesando...",
+                "sLengthMenu":     "Mostrar _MENU_ registros",
+                "sZeroRecords":    "No se encontraron resultados",
+                "sEmptyTable":     "Ningún dato disponible en esta tabla",
+                "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+                "sSearch":         "Buscar:",
+                "sUrl":            "",
+                "sInfoThousands":  ",",
+                "sLoadingRecords": "Cargando...",
+                "oPaginate": {
+                    "sFirst":    "Primero",
+                    "sLast":     "Último",
+                    "sNext":     "Siguiente",
+                    "sPrevious": "Anterior"
+                },
+                "oAria": {
+                    "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                }
+            },            
             "rowCallback": function(row, data, index) {
                 if (data.isComment) {
                     $(row).addClass('comment-row');
                 }
             }
         });
+        // Flatpickr en español y formato dd-mm-aaaa
         $("#calendar").flatpickr({
             defaultDate: getTodayDate(),
+            locale: {
+                firstDayOfWeek: 1,
+                weekdays: {
+                    shorthand: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+                    longhand: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
+                },
+                months: {
+                    shorthand: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    longhand: [
+                        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+                    ]
+                }
+            },
             onChange: function(selectedDates, dateStr, instance) {
                 if (table) {
                     table.ajax.reload();
                 }
             }
         });
+
+        // Cargar los datos al abrir
+        setTimeout(function () {
+            table.ajax.reload();
+        }, 100);
+
         function getTodayDate() {
             var today = new Date();
             var dd = String(today.getDate()).padStart(2, '0');

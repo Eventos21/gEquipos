@@ -102,7 +102,7 @@ $identificador = $vala;
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <td colspan="3"><strong>Total</strong></td>
+                                                <td colspan="4"><strong>Total</strong></td>
                                                 <td id="resultado-total">0</td>
                                                 <td></td>
                                             </tr>
@@ -452,7 +452,7 @@ function calculateTotal() {
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <td colspan="3"><strong>Total</strong></td>
+                                                <td colspan="4"><strong>Total</strong></td>
                                                 <td id="resultado-total1">0</td>
                                                 <td></td>
                                             </tr>
