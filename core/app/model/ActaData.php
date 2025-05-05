@@ -8,6 +8,7 @@ class ActaData {
         public $resultado;
         public $total;
         public $jugadores;
+        public $orden;
         public $codigofide;
         public $sala_personalizada;
         public function registro(){
@@ -49,10 +50,19 @@ class ActaData {
             $query = Executor::doit($sql);
             return Model::many($query[0],new ActaData());
         }
-        public static function vercontenidos1($sala_personalizada,$equipo){
-            $sql = "select c.*, CONCAT(j.apellido1, ' ',j.apellido2, ', ',j.nombre) as jugadores, j.codigofide from ".self::$tablename." c LEFT JOIN jugador j ON j.id=c.jugador where c.sala_personalizada=$sala_personalizada and c.equipo=$equipo ";
+        public static function vercontenidos1($sala_personalizada, $equipo) {
+            $sql = "SELECT c.*, 
+                           CONCAT(j.apellido1, ' ', j.apellido2, ', ', j.nombre) AS jugadores, 
+                           j.codigofide, 
+                           ej.orden 
+                    FROM " . self::$tablename . " c 
+                    LEFT JOIN jugador j ON j.id = c.jugador 
+                    LEFT JOIN equipo_jugador ej ON ej.jugador = c.jugador AND ej.equipo = c.equipo 
+                    WHERE c.sala_personalizada = $sala_personalizada 
+                      AND c.equipo = $equipo 
+                    ORDER BY c.id ASC";
             $query = Executor::doit($sql);
-            return Model::many($query[0],new ActaData());
+            return Model::many($query[0], new ActaData());
         }
         public static function duplicidadd($duplicidad){
         $sql = "select * from ".self::$tablename." where duplicidad=\"$duplicidad\"";

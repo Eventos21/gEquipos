@@ -61,6 +61,7 @@ $identificador = $vala;
                                         <thead>
                                             <tr class="table-primary">
                                                 <th>Nº</th>
+                                                <th>Orden</th>                                                
                                                 <th>FIDE</th>
                                                 <th>Jugador</th>
                                                 <th>Resultado</th>
@@ -74,6 +75,7 @@ $identificador = $vala;
                                             foreach ($datas as $data) { ?>
                                                 <tr>
                                                     <td><?php echo $contador1++; ?></td>
+                                                    <td><?php echo $data->orden; ?></td>
                                                     <td><?php echo $data->codigofide; ?></td>
                                                     <td><?php echo $data->jugadores; ?></td>
                                                     <?php if ($data->jugador=="") { ?>
@@ -296,6 +298,9 @@ $identificador = $vala;
                                         $('.resultado-select').change(function() {
                                             var recordId = $(this).data('id');
                                             var resultado = $(this).val();
+                                            var index = $(this).closest('tr').index(); // obtiene el índice de la fila
+
+                                            // Enviar el resultado del equipo local al servidor
                                             $.ajax({
                                                 url: 'index.php?action=updateresultado',
                                                 type: 'POST',
@@ -303,16 +308,33 @@ $identificador = $vala;
                                                 success: function(response) {
                                                     var result = JSON.parse(response);
                                                     if (result.status === 'success') {
-                                                        updateTable1();  // Refresh the table after updating the result
+                                                        updateTable1();
+
+                                                        // Mapeo espejo para resultado visitante
+                                                        let map = {
+                                                            '0': '1',
+                                                            '1': '0',
+                                                            '1/2': '1/2',
+                                                            '+': '-',
+                                                            '-': '+'
+                                                        };
+
+                                                        let visitanteSelect = $('#customerTable3 tbody tr').eq(index).find('.resultado-select1');
+
+                                                        // Solo actualizar si no se ha cambiado manualmente (no sobrescribimos si ya se tocó)
+                                                        if (!visitanteSelect.data('manual')) {
+                                                            visitanteSelect.val(map[resultado]).trigger('change');
+                                                        }
                                                     } else {
                                                         alert(result.message);
                                                     }
                                                 },
-                                                error: function(xhr, status, error) {
+                                                error: function(xhr) {
                                                     console.error(xhr.responseText);
                                                 }
                                             });
                                         });
+
 
                                         // Attach event handler to calculate total on change
                                         $('.resultado-select').change(calculateTotal);
@@ -389,6 +411,7 @@ function calculateTotal() {
                                         <thead>
                                             <tr class="table-primary">
                                                 <th>Nº</th>
+                                                <th>Orden</th>                                                
                                                 <th>FIDE</th>
                                                 <th>Jugador</th>
                                                 <th>Resultado</th>
@@ -402,6 +425,7 @@ function calculateTotal() {
                                             foreach ($datas as $data) { ?>
                                                 <tr>
                                                     <td><?php echo $contador1++; ?></td>
+                                                    <td><?php echo $data->orden; ?></td>
                                                     <td><?php echo $data->codigofide; ?></td>
                                                     <td><?php echo $data->jugadores; ?></td>
                                                     <?php if ($data->jugador =="") { ?>

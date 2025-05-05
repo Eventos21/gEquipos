@@ -6,6 +6,7 @@ $contador1 = 1;
 foreach ($datas as $data) {
     echo '<tr>
         <td>' . $contador1++ . '</td>
+        <td>' . $data->orden . '</td>
         <td>' . $data->codigofide . '</td>
         <td>' . $data->jugadores . '</td>';
 
