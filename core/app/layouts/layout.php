@@ -226,6 +226,11 @@ if (isset($_SESSION["typeuser"]) && ($_SESSION["typeuser"] == 1 || $_SESSION["ty
                             </div>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link menu-link" href="jugadorestadisticas">
+                                <i class="ri-bar-chart-line"></i> <span data-key="t-estadisticas">Estadísticas de Jugador</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link menu-link" href="archivado">
                                 <i class="ri-calendar-line"></i> <span data-key="t-archivado">Archivado</span>
                             </a>
