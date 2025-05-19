@@ -1,24 +1,18 @@
 <?php
 header('Content-Type: application/json');
 
-// 1) Conexión
-$mysqli = new mysqli("localhost", "root", "", "u362265027_chessmaster");
-if ($mysqli->connect_errno) {
-    echo json_encode([
-        "success" => false,
-        "message" => "Error de conexión a la base de datos"
-    ]);
-    exit;
-}
+// 1) Reusa la conexión ya existente
+$database = Database::getInstance();
+$mysqli = $database->getConnection();
 
-// 2) Validar criterio
-if (!isset($_POST['criterio']) || !trim($_POST['criterio'])) {
-    echo json_encode([
-        "success" => false,
-        "message" => "Criterio vacío"
-    ]);
+// 2) Validar entrada
+if (isset($_POST['id_jugador']) && ctype_digit($_POST['id_jugador'])) {
+  $idjug = (int)$_POST['id_jugador'];
+} else {
+  if (!isset($_POST['criterio'])|| !trim($_POST['criterio'])) {
+    echo json_encode([ "success"=>false,"message"=>"Criterio vacío" ]);
     exit;
-}
+  }
 $crit = $mysqli->real_escape_string(strtolower(trim($_POST['criterio'])));
 
 // 3) Buscar jugador

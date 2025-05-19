@@ -12,6 +12,11 @@ class ActaData {
         public $orden;
         public $codigofide;
         public $sala_personalizada;
+        public $tablero;
+        public $rival_acta;
+        public $color;
+        public $encuentro_id;
+        public $encuentro_pers_id;
         public function registro(){
             $jugador = ($this->jugador == null || $this->jugador == 0) ? 'NULL' : '"' . $this->jugador . '"';
             $sql = "insert into ".self::$tablename." (competencias,equipo,jugador) ";

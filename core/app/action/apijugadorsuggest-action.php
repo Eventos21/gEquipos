@@ -1,42 +1,29 @@
 <?php
-// core/app/action/apijugadorsuggest-action.php
 header('Content-Type: application/json');
+$database = Database::getInstance();
+$mysqli   = $database->getConnection();
 
-$mysqli = new mysqli("127.0.0.1", "root", "", "u362265027_chessmaster");
-if ($mysqli->connect_errno) {
-    echo json_encode([]);
-    exit;
+if (!isset($_GET['term']) || strlen(trim($_GET['term']))<2) {
+  echo json_encode([]);
+  exit;
 }
-
-$term = isset($_GET['term']) ? strtolower(trim($_GET['term'])) : "";
-if ($term === "") {
-    echo json_encode([]);
-    exit;
-}
-$esc = $mysqli->real_escape_string($term);
+$term = $mysqli->real_escape_string(trim($_GET['term']));
 
 $sql = "
-  SELECT id,
-         CONCAT_WS(' ',
-           nombre,
-           IFNULL(apellido1,''), 
-           IFNULL(apellido2,'')
-         ) AS label
+  SELECT 
+    id,
+    CONCAT_WS(' ', nombre, apellido1, apellido2) AS label
   FROM jugador
-  WHERE LOWER(nombre)   LIKE '%{$esc}%'
-     OR LOWER(apellido1) LIKE '%{$esc}%'
-     OR LOWER(apellido2) LIKE '%{$esc}%'
-     OR LOWER(numlicencia) LIKE '%{$esc}%'
-  ORDER BY nombre ASC
+  WHERE LOWER(CONCAT_WS(' ', nombre, apellido1, apellido2))
+        LIKE LOWER('%{$term}%')
   LIMIT 10
 ";
-$res = $mysqli->query($sql);
+$rs = $mysqli->query($sql);
 $out = [];
-while ($r = $res->fetch_assoc()) {
-    $out[] = [
-      "id"    => (int)$r['id'],
-      "label" => $r['label'],
-      "value" => $r['label']
-    ];
+while ($r = $rs->fetch_assoc()) {
+  $out[] = [
+    'label' => $r['label'],
+    'value' => $r['id']
+  ];
 }
 echo json_encode($out);
